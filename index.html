@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#064E3B">
+    <meta name="description" content="Create. Send. Get Paid. Professional invoices and receipts with no account, stored privately on your device.">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icon.png">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <title>InvoMint - Create. Send. Get Paid.</title>
+    <link rel="stylesheet" href="styles.css?v=7">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <a class="brand" href="#home" aria-label="InvoMint home">
+          <span class="brand-mark" aria-hidden="true"><img src="./icon.svg" alt=""></span>
+          <span><strong>InvoMint</strong><small>Create. Send. Get Paid.</small></span>
+        </a>
+        <div class="header-actions">
+          <span class="offline-label"><span></span> Saved on this device</span>
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch to dark theme">☾</button>
+        </div>
+      </header>
+
+      <main id="main-content">
+        <section class="view active" id="view-home" aria-labelledby="home-title">
+          <div class="welcome-row">
+            <div>
+              <p class="eyebrow">YOUR BUSINESS AT A GLANCE</p>
+              <h1 id="home-title">Good day<span id="welcome-name"></span></h1>
+              <p class="muted">Here is your business activity.</p>
+            </div>
+            <label class="month-picker">Period
+              <select id="dashboard-period" aria-label="Revenue chart period">
+                <option value="6">Last 6 months</option>
+                <option value="12">Last 12 months</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric-card metric-primary">
+              <span class="metric-label">Total revenue</span>
+              <strong id="metric-revenue">₦0.00</strong>
+              <span class="metric-caption">From paid invoices and receipts</span>
+            </article>
+            <article class="metric-card"><span class="metric-label">Invoices</span><strong id="metric-invoices">0</strong><span class="metric-caption">All created invoices</span></article>
+            <article class="metric-card"><span class="metric-label">Paid invoices</span><strong id="metric-paid">0</strong><span class="metric-caption">Marked as paid</span></article>
+            <article class="metric-card"><span class="metric-label">Unpaid</span><strong id="metric-unpaid">0</strong><span class="metric-caption">Awaiting payment</span></article>
+            <article class="metric-card"><span class="metric-label">Overdue</span><strong id="metric-overdue">0</strong><span class="metric-caption">Past their due date</span></article>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="card chart-card" aria-labelledby="chart-title">
+              <div class="card-heading"><div><h2 id="chart-title">Revenue</h2><p class="muted">Monthly paid activity</p></div></div>
+              <div id="revenue-chart" class="revenue-chart" role="img" aria-label="Monthly revenue chart"></div>
+            </section>
+            <section class="card quick-card" aria-labelledby="quick-title">
+              <div class="card-heading"><div><h2 id="quick-title">Quick actions</h2><p class="muted">Start a document in seconds</p></div></div>
+              <button class="quick-action" type="button" data-create="invoice"><span class="action-icon">＋</span><span><strong>Create invoice</strong><small>Bill a customer for work or products</small></span><span aria-hidden="true">→</span></button>
+              <button class="quick-action" type="button" data-create="receipt"><span class="action-icon action-receipt">＋</span><span><strong>Create receipt</strong><small>Record a completed payment</small></span><span aria-hidden="true">→</span></button>
+            </section>
+          </div>
+
+          <section class="card recent-card" aria-labelledby="recent-title">
+            <div class="card-heading"><div><h2 id="recent-title">Recent transactions</h2><p class="muted">Your latest invoices and receipts</p></div><button class="text-button" type="button" data-view="invoices">View all</button></div>
+            <div id="recent-transactions" class="transaction-list"></div>
+          </section>
+          <p class="privacy-notice">Your business information stays in this browser. Export a backup before clearing browser data or uninstalling.</p>
+        </section>
+
+        <section class="view" id="view-invoices" aria-labelledby="invoices-title">
+          <div class="view-heading"><div><p class="eyebrow">BILLING</p><h1 id="invoices-title">Invoices</h1><p class="muted">Create, review and track customer invoices.</p></div><button class="button button-primary" type="button" data-create="invoice">＋ Create invoice</button></div>
+          <div class="card"><div class="list-toolbar"><label class="search-field"><span class="sr-only">Search invoices</span><input id="invoice-search" type="search" placeholder="Search number or customer"></label><select id="invoice-filter" aria-label="Filter invoices"><option value="all">All invoices</option><option value="unpaid">Unpaid</option><option value="paid">Paid</option><option value="overdue">Overdue</option></select></div><div id="invoice-list" class="document-list"></div></div>
+        </section>
+
+        <section class="view" id="view-receipts" aria-labelledby="receipts-title">
+          <div class="view-heading"><div><p class="eyebrow">PAYMENTS</p><h1 id="receipts-title">Receipts</h1><p class="muted">A clear record of completed customer payments.</p></div><button class="button button-primary" type="button" data-create="receipt">＋ Create receipt</button></div>
+          <div class="card"><div class="list-toolbar"><label class="search-field"><span class="sr-only">Search receipts</span><input id="receipt-search" type="search" placeholder="Search number or customer"></label></div><div id="receipt-list" class="document-list"></div></div>
+        </section>
+
+        <section class="view" id="view-customers" aria-labelledby="customers-title">
+          <div class="view-heading"><div><p class="eyebrow">RELATIONSHIPS</p><h1 id="customers-title">Customers</h1><p class="muted">Keep customer contact details and transaction history.</p></div><button class="button button-primary" id="add-customer-button" type="button">＋ Add customer</button></div>
+          <form class="card editor-card" id="customer-form" hidden>
+            <div class="card-heading"><div><h2 id="customer-form-title">Add a customer</h2><p class="muted">Details are saved on this device.</p></div><button class="icon-button" id="close-customer-form" type="button" aria-label="Close customer form">×</button></div>
+            <input id="customer-id" type="hidden">
+            <div class="form-grid">
+              <label>Customer name<input id="customer-name" required maxlength="120" autocomplete="name"></label>
+              <label>Phone<input id="customer-phone" type="tel" maxlength="40" autocomplete="tel"></label>
+              <label>Email<input id="customer-email" type="email" maxlength="254" autocomplete="email"></label>
+              <label class="field-wide">Address<textarea id="customer-address" rows="2" maxlength="300" autocomplete="street-address"></textarea></label>
+            </div>
+            <div class="form-actions"><button class="button button-secondary" id="cancel-customer" type="button">Cancel</button><button class="button button-primary" type="submit">Save customer</button></div>
+          </form>
+          <div class="card"><label class="search-field customer-search"><span class="sr-only">Search customers</span><input id="customer-search" type="search" placeholder="Search customers"></label><div id="customer-list" class="customer-list"></div></div>
+          <section class="card" id="customer-history" aria-labelledby="customer-history-title" hidden>
+            <div class="card-heading"><h2 id="customer-history-title">Transaction history</h2><button class="button button-secondary button-small" id="close-customer-history" type="button">Close</button></div>
+            <div id="customer-history-list" class="transaction-list"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-settings" aria-labelledby="settings-title">
+          <div class="view-heading"><div><p class="eyebrow">WORKSPACE</p><h1 id="settings-title">Settings</h1><p class="muted">Business profile, reusable items, appearance and your data.</p></div></div>
+          <section class="card settings-card" aria-labelledby="business-profile-title">
+            <div class="card-heading"><div><h2 id="business-profile-title">Business profile</h2><p class="muted">Used to prefill new invoices and receipts.</p></div></div>
+            <form id="business-form">
+              <div class="form-grid">
+                <label>Business name<input id="business-name" maxlength="120" autocomplete="organization"></label>
+                <label>Phone<input id="business-phone" type="tel" maxlength="40" autocomplete="tel"></label>
+                <label>Email<input id="business-email" type="email" maxlength="254" autocomplete="email"></label>
+                <label>Website<input id="business-website" type="url" maxlength="200" placeholder="https://"></label>
+                <label class="field-wide">Address<textarea id="business-address" rows="2" maxlength="300" autocomplete="street-address"></textarea></label>
+                <label>Tax identification number<input id="business-tax-id" maxlength="80"></label>
+                <label>Default currency<select id="business-currency"><option value="NGN">NGN — Nigerian naira</option><option value="USD">USD — US dollar</option><option value="GBP">GBP — British pound</option><option value="EUR">EUR — Euro</option></select></label>
+                <label>Business logo<input id="business-logo" type="file" accept="image/*"><small>Optional image, up to 1 MB.</small></label>
+                <label>Signature / payment instructions<input id="business-signature" maxlength="300" placeholder="Optional"></label>
+              </div>
+              <div class="form-actions"><button class="button button-primary" type="submit">Save business profile</button><span class="form-feedback" id="business-feedback" role="status"></span></div>
+            </form>
+          </section>
+
+          <section class="card settings-card" aria-labelledby="catalog-title">
+            <div class="card-heading"><div><h2 id="catalog-title">Products & services</h2><p class="muted">Save reusable descriptions and prices for future invoices.</p></div><button class="button button-secondary button-small" id="add-product-button" type="button">＋ Add item</button></div>
+            <form id="product-form" hidden>
+              <input id="product-id" type="hidden">
+              <div class="form-grid">
+                <label>Name<input id="product-name" required maxlength="120"></label>
+                <label>Category<select id="product-category"><option>Product</option><option>Service</option><option>Other</option></select></label>
+                <label>Price<input id="product-price" type="number" min="0" step="0.01" inputmode="decimal" required></label>
+                <label class="field-wide">Description<textarea id="product-description" rows="2" maxlength="300"></textarea></label>
+              </div>
+              <div class="form-actions"><button class="button button-secondary" id="cancel-product" type="button">Cancel</button><button class="button button-primary" type="submit">Save item</button></div>
+            </form>
+            <div id="product-list" class="customer-list"></div>
+          </section>
+
+          <section class="card settings-card" aria-labelledby="appearance-title">
+            <div class="card-heading"><div><h2 id="appearance-title">Appearance & numbering</h2><p class="muted">Choose a display mode and document style.</p></div></div>
+            <div class="settings-inline">
+              <label>Theme<select id="theme-setting"><option value="light">Light</option><option value="dark">Dark</option><option value="system">Use device setting</option></select></label>
+              <label>Document style<select id="template-setting"><option value="modern">Modern</option><option value="minimal">Minimal</option><option value="corporate">Corporate</option><option value="classic">Classic</option><option value="elegant">Elegant</option></select></label>
+              <label>Invoice prefix<input id="invoice-prefix" maxlength="12" value="INV"></label>
+            </div>
+          </section>
+
+          <section class="card settings-card" aria-labelledby="backup-title">
+            <div class="card-heading"><div><h2 id="backup-title">Data backup & restore</h2><p class="muted">Export a portable copy or restore a previous backup.</p></div></div>
+            <div class="backup-actions"><button class="button button-secondary" id="install-app" type="button" hidden>Install app</button></div>
+            <div class="backup-actions"><button class="button button-primary" id="export-backup" type="button">Download backup</button><label class="button button-secondary file-button">Restore backup<input id="import-backup" type="file" accept="application/json,.json"></label></div>
+            <p class="privacy-notice">Data is stored locally in this browser, not in a cloud account. Clearing browser data or uninstalling may erase it. Keep a backup in a safe place.</p>
+            <p class="form-feedback" id="backup-feedback" role="status"></p>
+          </section>
+          <section class="card settings-card about-card"><h2>About InvoMint</h2><p class="muted">Your business documents, simplified. Create professional invoices and receipts without an account. Documents and customer data remain on this device unless you choose to share or export them.</p><details><summary>Privacy information</summary><p>This app does not upload business or customer records to a server. Android share, WhatsApp, PDF and image export may hand content to the app or service you select.</p></details></section>
+        </section>
+
+        <section class="view" id="view-create" aria-label="Create document">
+          <div class="view-heading create-heading"><div><p class="eyebrow">DOCUMENT EDITOR</p><h1 id="create-title">Create invoice</h1></div><button class="button button-secondary" id="close-create" type="button">Close</button></div>
+          <div id="invoice-editor" class="editor-frame active"><iframe title="Invoice editor" src="./invoice-generator/index.html?workspace=1"></iframe></div>
+          <div id="receipt-editor" class="editor-frame"><iframe title="Receipt editor" src="./receipt-generator/index.html?workspace=1"></iframe></div>
+        </section>
+      </main>
+
+      <button class="fab" id="create-fab" type="button" aria-label="Create a document" aria-expanded="false">＋</button>
+      <div class="fab-menu" id="fab-menu" hidden>
+        <button type="button" data-create="invoice">Create invoice</button>
+        <button type="button" data-create="receipt">Create receipt</button>
+      </div>
+      <nav class="bottom-nav" aria-label="Main navigation">
+        <button class="nav-item active" type="button" data-view="home" aria-current="page"><span aria-hidden="true">⌂</span><small>Home</small></button>
+        <button class="nav-item" type="button" data-view="invoices"><span aria-hidden="true">▤</span><small>Invoices</small></button>
+        <button class="nav-item" type="button" data-view="receipts"><span aria-hidden="true">▣</span><small>Receipts</small></button>
+        <button class="nav-item" type="button" data-view="customers"><span aria-hidden="true">♙</span><small>Customers</small></button>
+        <button class="nav-item" type="button" data-view="settings"><span aria-hidden="true">⚙</span><small>Settings</small></button>
+      </nav>
+      <div class="toast" id="app-toast" role="status" aria-live="polite" hidden></div>
+    </div>
+    <script src="app.js?v=7"></script>
+  </body>
+</html>
